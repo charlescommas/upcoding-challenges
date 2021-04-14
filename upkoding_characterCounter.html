@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .row-input{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="row row-input">
+        <label>Input</label>
+        <input type="text" id="idInput">
+    </div>
+    <button onclick="count()">Go!</button>
+
+</body>
+<script>
+    function count()
+    {
+        //get the input string
+        var input = document.getElementById("idInput").value;
+        //transform into array
+        var inputArr = input.split("");
+
+        var ascii = [];
+        var flag = 0;
+
+        for(i=0; i<inputArr.length; i++)
+        {
+            flag = 0;
+            for(j=0; j<ascii.length; j++)
+            {
+                if(ascii[j] === inputArr[i]){
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag === 0){
+                ascii[i] = inputArr[i].charCodeAt(0);
+            }
+        }
+
+        console.log(ascii);
+    }
+</script>
+</html> 

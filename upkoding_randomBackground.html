@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .full-wrapper{
+            width: 100vw; 
+            height: 100vh; 
+            background-color: #ddd;
+        }
+        .btn-wrapper{
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+        }
+        .btn{
+            display: inline-block;
+            text-align: center;
+            padding: 5px 10px;
+            vertical-align: middle;
+            cursor: pointer;
+            color: #fff;
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+            border-radius: 5px;
+        }
+        .btn:hover{
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body style="margin: 0">
+    <div class="full-wrapper" id="idBackground">
+        <div class="btn-wrapper">
+            <button class="btn" onclick="changeColor()">Change color!</button>
+            <button class="btn" onclick="changeGradient()">Change color too, except it's gradient!</button>
+        </div>
+    </div>
+</body>
+<script>
+    function changeColor()
+    {
+        var randomColor1 = randomColor();
+
+        document.getElementById("idBackground").style.backgroundImage = null;
+        document.getElementById("idBackground").style.backgroundColor = "#" + randomColor1;
+    }
+
+    function changeGradient()
+    {
+        var randomColor1 = randomColor();
+        var randomColor2 = randomColor();
+
+        document.getElementById("idBackground").style.backgroundColor = null;
+        document.getElementById("idBackground").style.backgroundImage = "linear-gradient(#" + randomColor1 + ", #" + randomColor2 + ")";
+    }
+
+    function randomColor()
+    {
+        //generate a random number
+        var random = Math.random();
+        //convert to hexa value
+        var hexRand = random.toString(16);
+        //get the last 6 digits
+        var hexRandColor = hexRand.slice(-6);
+
+        return hexRandColor;
+    }
+</script>
+</html> 

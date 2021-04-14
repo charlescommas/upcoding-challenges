@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Data using API | UpKoding</title>
+    <style>
+        *, ::before, ::after{
+            box-sizing: border-box;
+        }
+        .wrapper{
+            margin: 20px 80px;
+        }
+        .row{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .card-wrapper{
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding: 20px;
+        }
+        .card{
+            /* border: 3px solid #c0ccd7; */
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: all 0.5s;
+        }
+        .card:hover{
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .card img{
+            width: 120px;
+            height: 120px;
+            overflow: hidden;
+            border-radius: 50%;
+            border: 3px solid #c0ccd7;
+        }
+        .card p{
+            color: #4bbeb3;
+            font-weight: bold;
+        }
+        .card small{
+            color: #8896a3;
+        }
+        .input-wrapper{
+            flex: 0 0 40%;
+            max-width: 40%;
+            padding: 20px;
+        }
+        input{
+            width: 100%;
+            display: inline-block;
+            height: 34px;
+            padding: 6px 12px;
+            color: #555;
+            background-color: #fff;
+            border: 2px solid #c0ccd7;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="row" style="justify-content: center;">
+            <div class="input-wrapper">
+                <input type="text" id="idFilter" onkeyup="filter()" placeholder="Filter nama depan, nama belakang, atau email...">
+            </div>
+        </div>
+        <div class="row" id="idDiv">
+            
+        </div>
+    </div>
+</body>
+<script>
+
+    let users;
+
+    async function getData(url) {
+        // Storing response
+        const response = await fetch(url);
+        
+        // Storing data in form of JSON
+        //convert response to json
+        var data = await response.json();
+        console.log(data);
+        if (response) {
+            if(response.status === 200){
+                console.log("Data loaded");
+                storeData(data);
+                showAll(data);
+            }else if(response.status === 404){
+                console.log("Data not found");
+            }
+        }
+    }
+
+    function storeData(data)
+    {
+        //convert to array
+        users = data.data.map(obj => Object.values(obj));
+        console.log(users);
+    }
+
+    function showAll(data) {
+        let tab = '';
+        // Loop to access all rows 
+        for (let r of data.data) {
+            tab +=
+                `<div class="card-wrapper">
+                <div class="card">
+                <img src="${r.avatar}"> 
+                <p>${r.first_name} ${r.last_name}</p>
+                <small>${r.email}</small>
+                </div>
+                </div>`;
+        }
+        // Setting innerHTML as tab variable
+        document.getElementById("idDiv").innerHTML += tab;
+    }
+    
+    //run when document is ready
+    document.addEventListener('DOMContentLoaded', function(){
+        var url = "https://reqres.in/api/users/";
+        getData(url);
+    });
+
+    function filter()
+    {
+        //get the search input value
+        var search = document.getElementById("idFilter").value;
+        console.log("search: " + search);
+        //display filtered data
+        if(search !== ""){
+            //filter data according to input
+            filteredData = users.filter(function(user){
+                //return if input matched either [1]email, [2]front_name, or [3]last_name
+                return user[1].includes(search) || user[2].includes(search) || user[3].includes(search);
+            });
+            console.log(filteredData);
+        }else{
+            //if no input, then display everything
+            filteredData = users;
+        }
+
+        //get the display div
+        let filteredDiv = document.getElementById("idDiv");
+        //reset the display div
+        filteredDiv.innerHTML = "";
+        //create a div for each value to be displayed
+        var tab = '';
+        filteredData.forEach(data => {
+            tab +=
+                `<div class="card-wrapper">
+                <div class="card">
+                <img src="` + data[4] + `"> 
+                <p>` + data[2] + ` ` + data[3] + `</p>
+                <small>${data[1]}</small>
+                </div>
+                </div>`;
+        });
+        document.getElementById("idDiv").innerHTML += tab;
+    }
+</script>
+</html>

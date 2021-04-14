@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .row-input{
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="row row-input">
+        <label>Accepted Characters</label>
+        <input type="text" id="idChar" value="abcdefghijklmnopqrstuvwxyz1234567890">
+    </div>
+    <div class="row row-input">
+        <label>Cipher Text</label>
+        <input type="text" id="idCipher">
+    </div>
+    <button onclick="decode()">Decode!</button>
+
+</body>
+<script>
+    function decode()
+    {
+        //get the source (accepted chars)
+        source = document.getElementById("idChar").value;
+        //transform into array
+        sourceArr = source.split("");
+
+        //get the cipher text
+        cipherText = document.getElementById("idCipher").value;
+        //transform into array
+        cipherTextArr = cipherText.split("");
+
+        //converted text (into numbers) will be stored here
+        convertedText = [];
+        ctr = 0;
+        
+        //transform cipher text to numbers
+        for(i=0; i<cipherTextArr.length; i++)
+        {
+            for(j=0; j<sourceArr.length; j++)
+            {
+                if(cipherTextArr[i] === sourceArr[j]){
+                    convertedText[ctr] = j;
+                    ctr++;
+                    break;
+                }else if(cipherTextArr[i] === " "){
+                    convertedText[ctr] = " ";
+                    ctr++;
+                    break;
+                }else if(cipherTextArr[i] === "-"){
+                    convertedText[ctr] = "-";
+                    ctr++;
+                    break;
+                }
+            }
+        }
+
+        //get the last val
+        last = sourceArr.length - 1;
+        
+        //decrypt every iteration based on the converted text (into numbers)
+        for(range=0; range<50; range++)
+        {
+            //reset decrypted text
+            decryptedText = "";
+            
+            //shift right 1x
+            oldSourceArr = [...sourceArr];
+            for(i=0; i<sourceArr.length; i++)
+            {
+                if(i == 0){
+                    sourceArr[i] = oldSourceArr[last];
+                }
+                else{
+                    sourceArr[i] = oldSourceArr[(i-1)];
+                }
+            }
+
+            //decrypt
+            for(i=0; i<convertedText.length; i++)
+            {
+                for(j=0; j<sourceArr.length; j++)
+                {
+                    if(convertedText[i] === j){
+                        decryptedText += sourceArr[j];
+                        break;
+                    }else if(convertedText[i] === " " || convertedText[i] === "-"){
+                        decryptedText += convertedText[i];
+                        break;
+                    }
+                }
+            }
+
+            //output
+            if(range==16){
+                document.write('<span style="color: #f00">Shift[' + (range+1) + '] : ' + decryptedText + '</span><br><br>');
+            }else{
+                document.write('<span style="color: #000">Shift[' + (range+1) + '] : ' + decryptedText + '</span><br><br>');
+            }
+        }
+    }
+</script>
+</html> 

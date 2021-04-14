@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Data using API | UpKoding</title>
+</head>
+<body>
+    <div class="wrapper">
+        <label>Search</label>
+        <input type="text" id="idFilter" onkeyup="filter()">
+    </div>
+    <div class="table">
+        <table id="idTable">
+
+        </table>
+    </div>
+    <div id="idDiv">
+    </div>
+</body>
+<script>
+
+    let users = [];
+    let users2;
+
+    async function getData(url) {
+        // Storing response
+        const response = await fetch(url);
+        
+        // Storing data in form of JSON
+        //convert response to json
+        var data = await response.json();
+        console.log(data);
+        if (response) {
+            if(response.status === 200){
+                console.log("Data loaded");
+                users = data;
+                showAll(data);
+            }else if(response.status === 404){
+                console.log("Data not found");
+            }
+        }
+    }
+
+    function showAll(data) {
+        let tab = 
+            `<tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Avatar</th>
+            </tr>`;
+        
+        // Loop to access all rows 
+        for (let r of data.data) {
+            tab += `<tr>
+                <td>${r.id}</td>
+                <td>${r.first_name} ${r.last_name}</td>
+                <td>${r.email}</td>
+                <td>${r.avatar}</td> 
+                </tr>`;
+        }
+        // Setting innerHTML as tab variable
+        document.getElementById("idTable").innerHTML = tab;
+    }
+    
+    //run when document is ready
+    document.addEventListener('DOMContentLoaded', function(){
+        var url = "https://reqres.in/api/users/";
+        getData(url);
+    });
+
+    function filter()
+    {
+        //get the search input value
+        var search = document.getElementById("idFilter").value;
+        //if no input, then dont do anything
+        if(search === ""){
+            //get the display div
+            let filteredDiv = document.getElementById("idDiv");
+            //reset the display div
+            filteredDiv.innerHTML = "";
+            return;
+        }
+        //make user data an array
+        userData = users.data;
+        //filter user data
+        filteredData = userData.filter(user => {
+            return user.first_name.includes(search) || user.last_name.includes(search) || user.email.includes(search);
+        });
+        console.log(filteredData);
+
+        //get the display div
+        let filteredDiv = document.getElementById("idDiv");
+        //reset the display div
+        filteredDiv.innerHTML = "";
+        //create a div for each value to be displayed
+        filteredData.forEach(data => {
+            let div = document.createElement('div');
+            div.innerHTML = data.first_name + " " + data.last_name;
+            filteredDiv.append(div);
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap');
+        body{
+            margin: 0;
+        }
+        *, ::after, ::before{
+            box-sizing: border-box;
+        }
+        .calculator{
+            margin: 20px;
+            max-width: 40%;
+            background-color: #444045;
+            border-radius: 10px;
+            box-shadow: 4px 8px 16px 0 rgba(0,0,0,0.4);
+        }
+        .display-wrapper{
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        .display{
+            flex: 0 0 100%;
+            max-width: 100%;
+            border: 1px solid #222;
+            border-radius: 15px;
+            padding: 20px;
+            background-color: #698475;
+            /* background-color: #fefefe; */
+            display: flex;
+            justify-content: end;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .button-wrapper{
+            width: auto;
+            padding: 0 20px 20px;
+        }
+
+        .button-operator{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .button-operator .operator{
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding: 5px;
+        }
+        .operator button{
+            width: 100%;
+            padding: 5px;
+            background-color: #777487;
+            color: #ddd;
+        }
+
+        .button-number-wrapper{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .button-equal{ /*right side*/
+            flex: 0 0 25%;
+            max-width: 25%;
+            padding: 5px;
+            max-height: 100%;
+        }
+        .button-equal button{
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+            background-color: #777487;
+            color: #ddd;
+        }
+
+        .button-numbers{ /*left side*/
+            flex: 0 0 75%;
+            max-width: 75%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .button-numbers-row{
+            flex: 0 0 100%;
+            max-width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .number{
+            flex: 0 0 33.3%;
+            max-width: 33.3%;
+            padding: 5px;
+        }
+        .number button{
+            width: 100%;
+            padding: 5px;
+            background-color: #777487;
+            color: #ddd;
+        }
+        button{
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div class="display-wrapper">
+            <div class="display" id="idDisplay">
+                0
+            </div>
+        </div>
+        <div class="button-wrapper">
+            <div class="button-operator">
+                <div class="operator">
+                    <button onclick="addOper('+')">+</button>
+                </div>
+                <div class="operator">
+                    <button onclick="addOper('-')">-</button>
+                </div>
+                <div class="operator">
+                    <button onclick="addOper('*')">×</button>
+                </div>
+                <div class="operator">
+                    <button onclick="addOper('/')">÷</button>
+                </div>
+            </div>
+
+            <div class="button-number-wrapper">
+                <!-- left side -->
+                <div class="button-numbers">
+                    <div class="button-numbers-row">
+                        <div class="number">
+                            <button onclick="addNum(7)">7</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="addNum(8)">8</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="addNum(9)">9</button>
+                        </div>
+                    </div>
+                    <div class="button-numbers-row">
+                        <div class="number">
+                            <button onclick="addNum(4)">4</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="addNum(5)">5</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="addNum(6)">6</button>
+                        </div>
+                    </div>
+                    <div class="button-numbers-row">
+                        <div class="number">
+                            <button onclick="addNum(1)">1</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="addNum(2)">2</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="addNum(3)">3</button>
+                        </div>
+                    </div>
+                    <div class="button-numbers-row">
+                        <div class="number">
+                            <button onclick="addNum(0)">0</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="addFloat('.')">.</button>
+                        </div>
+                        <div class="number">
+                            <button onclick="reset()">C</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- right side -->
+                <div class="button-equal">
+                    <button onclick="calculate()">
+                        =
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var innerHtml = "";
+    var calculation = 0;
+    var firstValue = 0;
+    var secondValue = 0;
+    var operator = '';
+    var flagFirst = 0;
+    var flagSecond = 0;
+    var flagOperator = 1;
+    var flagFloatPoint = 1;
+    var flagNum = 1;
+    var display;
+    var oldDisplay;
+
+    function addNum(val)
+    {
+        if(flagNum === 0) return;
+        if(flagSecond === 0 && flagFirst === 0){ // very first value
+            display = document.getElementById("idDisplay");
+            display.innerHTML = val;
+            oldDisplay = document.getElementById("idDisplay").innerHTML;
+            flagFirst = 1;
+        }else{
+            oldDisplay = document.getElementById("idDisplay").innerHTML;
+            oldDisplay += val;
+            display = document.getElementById("idDisplay");
+            display.innerHTML = oldDisplay;
+        }
+
+        console.log("oldDisplay: " + oldDisplay);
+        
+        if(flagSecond === 0){ //first value
+            firstValue = parseFloat(oldDisplay);
+            console.log("adding first value: " + firstValue);
+        }else if(flagSecond === 1){ //second value
+        //split the display string, get the value after operator as secondValue
+            split = oldDisplay.split(operator);
+            secondValue = parseFloat(split[1]);
+            console.log("adding second value: " + secondValue);
+            //disable adding operator after second value
+            flagOperator = 0;
+            console.log("flag operator: 0");
+        }
+    }
+
+    function addFloat()
+    {
+        if(flagNum == 0) return;
+        if(flagFloatPoint === 1){
+            oldDisplay = document.getElementById("idDisplay").innerHTML;
+            oldDisplay += ".";
+            display = document.getElementById("idDisplay");
+            display.innerHTML = oldDisplay;
+            //disable to add another floating point
+            flagFloatPoint = 0;
+            console.log("flag float: disallow");
+        }
+        console.log("Old display: ", oldDisplay);
+    }
+
+    function addOper(val)
+    {
+        if(flagOperator === 0) return 0;
+        oldDisplay = document.getElementById("idDisplay").innerHTML;
+        //add the operator
+        oldDisplay += val;
+        display = document.getElementById("idDisplay");
+        display.innerHTML = oldDisplay;
+        //get the operator
+        operator = val.toString();
+        console.log("adding operator: " + operator);
+        flagSecond = 1;
+        console.log("flagSecond = 1");
+        //disable adding operator after operator
+        flagOperator = 0;
+        //allow floating point
+        flagFloatPoint = 1;
+        console.log("flag float: allow");
+        console.log("flag operator: disallow");
+        flagNum = 1;
+    }
+
+    function calculate()
+    {
+        if(firstValue !== null && secondValue !==null){
+            if(operator === '+'){
+                console.log("calculate +");
+                console.log("calculation: " + firstValue + " + " + secondValue);
+                calculation = parseFloat(firstValue) + parseFloat(secondValue);
+            }else if(operator === '-'){
+                console.log("calculate -");
+                console.log("calculation: " + firstValue + " - " + secondValue);
+                calculation = parseFloat(firstValue) - parseFloat(secondValue);
+            }else if(operator === '*'){
+                console.log("calculate -");
+                console.log("calculation: " + firstValue + " * " + secondValue);
+                calculation = parseFloat(firstValue) * parseFloat(secondValue);
+            }else if(operator === '/'){
+                console.log("calculate -");
+                console.log("calculation: " + firstValue + " / " + secondValue);
+                calculation = parseFloat(firstValue) / parseFloat(secondValue);
+            }
+        }
+
+        firstValue = calculation;
+        flagSecond = 1;
+        //allow operator
+        flagOperator = 1;
+        console.log("flagOperator: 1");
+        flagNum = 0;
+
+        //update the display
+        display = document.getElementById("idDisplay");
+        display.innerHTML = calculation.toString();
+    }
+
+    function reset()
+    {
+        display = document.getElementById("idDisplay");
+        display.innerHTML = "0";
+        flagFirst = 0;
+        flagSecond = 0;
+        flagNum = 1;
+        firstValue = 0;
+        console.log("flagSecond = 0");
+    }
+
+
+    //__________________________________________________________________________________________________________________SAFEE
+</script>
+</html> 

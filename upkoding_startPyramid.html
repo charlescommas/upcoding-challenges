@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .row-input{
+            margin-bottom: 10px;
+        }
+        .pyramid{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1em;
+            background-color: #000; 
+            color: #fff;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="row row-input">
+        <label>Number of rows: </label>
+        <input type="number" id="rows" min="1">
+    </div>
+    <button onclick="makePyramid()">Go!</button>
+    <div id="divOutput"></div>
+
+</body>
+<script>
+    function makePyramid()
+    {
+        //get the rows (height) of pyramid
+        var rows = document.getElementById("rows").value;
+
+        //prepare output variable
+        var innerHtml = "";
+        
+        innerHtml += "<div class='pyramid'>";
+        //for each rows...
+        for(i=0; i<rows; i++)
+        {
+            //for each columns...
+            innerHtml += "&ensp;";
+            
+            //print the spaces before the stars (for each column)
+            for(j=0; j<(rows-(i+1)); j++)
+            {
+                innerHtml += "&ensp;";
+            }
+
+            //print the stars
+            for(j=0; j<(i+1); j++)
+            {
+                innerHtml += "*&ensp;";
+            }
+
+            //move to next row
+            innerHtml += "<br>";
+        }
+        innerHtml += "</div>";
+
+        //get the output value into output div
+        var output = document.getElementById("divOutput");
+        output.innerHTML = innerHtml;
+    }
+</script>
+</html> 
