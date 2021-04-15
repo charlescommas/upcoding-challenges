@@ -78,7 +78,7 @@
 </body>
 <script>
 
-    let users;
+    let users = [];
 
     async function getData(url) {
         // Storing response
@@ -102,8 +102,8 @@
     function storeData(data)
     {
         //convert to array
-        users = data.data.map(obj => Object.values(obj));
-        console.log(users);
+        var newArr = data.data.map(obj => Object.values(obj));
+        users = users.concat(newArr);
     }
 
     function showAll(data) {
@@ -125,8 +125,10 @@
     
     //run when document is ready
     document.addEventListener('DOMContentLoaded', function(){
-        var url = "https://reqres.in/api/users/";
+        var url = "https://reqres.in/api/users?page=1";
+        var url2 = "https://reqres.in/api/users?page=2";
         getData(url);
+        getData(url2);
     });
 
     function filter()
