@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upkoding | Mix Max</title>
+</head>
+<body>
+    <div class="input">
+        <input type="number" id="idInput">
+        <button onclick="run()">Run!</button>
+    </div>
+    <div class="output" id="divOutput">
+    </div>
+</body>
+<script>
+    function run()
+    {
+        var input = document.getElementById('idInput').value;
+        if(input === ''){
+            alert('Please enter a number');
+            return;
+        }
+        input = parseInt(input);
+        console.log("Input number: " + input);        
+        console.log("Max number: " + input.maxNumber());
+        console.log("Min number: " + input.minNumber());
+        document.getElementById('divOutput').innerHTML = "<p>input = " + input + "</p><p>input.maxNumber() = " + input.maxNumber() + "</p><p>input.minNumber() = " + input.minNumber() + "</p>";
+    }
+
+    Number.prototype.maxNumber = function(){
+        //ambil keseluruhan angka inputannya
+        var num = parseInt(this.valueOf());
+
+        //ambil panjang keseluruhan angka inputannya (ubah ke string dahulu)
+        var totalChar = String(num).length;
+        // modulus & pembagi dibutuhkan utk mengambil masing2 angka dari keseluruhan angka
+        var modulus = 10;
+        var pembagi = 1;
+        //curr akan digunakan sebagai penampung masing2 angka yg dibandingkan
+        var curr = 0;
+        //set pembandingnya (max) dengan angka paling kecil
+        var max = 0;
+        //fungsi utk membandingkan masing2 angka dgn max value
+        for(i=0; i<totalChar; i++){
+            // ambil masing2 satuan angka
+            curr = Math.floor(num % modulus / pembagi);
+            //bandingkan dengan max value
+            if(curr > max){
+                //kalau nilai curr lebih besar dari max, update max
+                max = curr;
+            }
+            //update mod & pembagi utk memperoleh satuan angka berikutnya
+            modulus *= 10;
+            pembagi *= 10;
+        }
+        return max;
+    }
+
+    Number.prototype.minNumber = function(){
+        //ambil keseluruhan angka inputannya
+        var num = parseInt(this.valueOf());
+
+        //ambil panjang keseluruhan angka inputannya (ubah ke string dahulu)
+        var totalChar = String(num).length;
+        // modulus & pembagi dibutuhkan utk mengambil masing2 angka dari keseluruhan angka
+        var modulus = 10;
+        var pembagi = 1;
+        //curr akan digunakan sebagai penampung masing2 angka yg dibandingkan
+        var curr = 0;
+        //set pembandingnya (min) dengan angka paling besar
+        var min = 9;
+        //fungsi utk membandingkan masing2 angka dgn max value
+        for(i=0; i<totalChar; i++){
+            // ambil masing2 satuan angka
+            curr = Math.floor(num % modulus / pembagi);
+            //bandingkan dengan max value
+            if(curr < min){
+                //kalau nilai curr lebih kecil dari min, update max
+                min = curr;
+            }
+            //update mod & pembagi utk memperoleh satuan angka berikutnya
+            modulus *= 10;
+            pembagi *= 10;
+        }
+        return min;
+    }
+</script>
+</html>
