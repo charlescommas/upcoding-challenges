@@ -47,6 +47,8 @@
             text-align: center;
             transition: transform 0.8s;
             transform-style: preserve-3d;
+            box-shadow:0 8px 16px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
         }
         .clicked{
             transform: rotateY(180deg);
@@ -64,14 +66,51 @@
             padding: 5px;
         }
         .card-back {
-            background-color: #eef;
+            background-color: #fff;
             transform: rotateY(180deg);
             padding: 15px;
-        } 
+        }
+        .start-button-wrapper{
+            position: absolute;
+            z-index: 99;
+            width: 300px;
+            height: 150px;
+            top: 50%;
+            left: 50%;
+            padding: 30px;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.8s;
+        }
+        .start-button{
+            display: inline-block;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 5px;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            background-color: #5cb85c;
+            border: 1px solid #4cae4c;
+            color: #fff;
+        }
+        .start-button:hover{
+            background-color: #4cae4c;
+        }
         
     </style>
 </head>
 <body>
+    <div class="start-button-wrapper" id="idStart">
+        <div style="text-align: center">
+            <p>Press Start to begin.</p>
+            <button class="start-button" onclick="start()">Start!</button>
+        </div>
+    </div>
     <div class="wrapper">
         <div class="row" style="justify-content: end;">
             <h2>Score: <span id="idScore">0</span></h2>
@@ -90,13 +129,18 @@
     document.addEventListener('DOMContentLoaded', function(){
         //generate randomized card
         generateCards();
-        console.log('cards generated');
-        //get all cards
+    });
+
+    function start()
+    {
+        var startDiv = document.getElementById('idStart');
+        startDiv.style.opacity = 0;
+        startDiv.style.visibility = 'hidden';
         document.querySelectorAll('.card').forEach(item => {
             //add event listener Click for all cards
             item.addEventListener('click', clickFunc);
         });
-    });
+    }
 
     function generateCards()
     {
@@ -168,24 +212,19 @@
             //disable click on the card
             this.removeEventListener('click', clickFunc);
         }
-        console.log('card1: ' + card1 + ', card2: ' + card2);
 
         if(card1 !== 0 && card2 !== 0){
             //get the current score (to be changed)
             var currScore = document.getElementById('idScore').innerHTML;
-            console.log('score: ' + currScore);
             if(card1 === card2){
                 //also increase the score
-                console.log('add score');
                 currScore = parseInt(currScore);
                 currScore += 2;
             }else{
                 //if mismatch, decrease the score
                 if(currScore == 0){
-                    console.log('minimum score reached');
                 }else{
                     currScore -= 1;
-                    console.log('minus score');
                 }
                 //reset func
                 resetCard(divCard1, divCard2);
