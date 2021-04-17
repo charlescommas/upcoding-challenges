@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Game | UpKoding</title>
+    <style>
+        *, ::before, ::after{
+            box-sizing: border-box;
+        }
+        .wrapper{
+            margin: 20px 80px;
+        }
+        .row{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .playzone{
+            width: 65%;
+            margin: 0 auto;
+        }
+        /* each card get 1/4 space */
+        .card-wrapper{
+            flex: 0 0 25%;
+            max-width: 25%;
+            max-height: 100%;
+            padding: 10px;
+        }
+        .card {
+            background-color: transparent;
+            width: 100%;
+            height: 200px;
+            perspective: 1000px; 
+        }
+        .card img{
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            object-fit:cover;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        .clicked{
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        .card-front {
+            background-color: #fa5655;
+            padding: 5px;
+        }
+        .card-back {
+            background-color: #eef;
+            transform: rotateY(180deg);
+            padding: 15px;
+        } 
+        
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="row" style="justify-content: end;">
+            <h2>Score: <span id="idScore">0</span></h2>
+        </div>
+        <div class="row playzone" id="idDiv"></div>
+    </div>
+</body>
+<script>
+    //init state
+    var card1 = 0;
+    var card2 = 0;
+    var divCard1 = '';
+    var divCard2 = '';
+
+    //run when document is ready
+    document.addEventListener('DOMContentLoaded', function(){
+        //generate randomized card
+        generateCards();
+        console.log('cards generated');
+        //get all cards
+        document.querySelectorAll('.card').forEach(item => {
+            //add event listener Click for all cards
+            item.addEventListener('click', clickFunc);
+        });
+    });
+
+    function generateCards()
+    {
+        //generate array for card values & image source
+        let arr = [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6];
+        let arrImg = [];
+
+        //randomize the order of the array
+        shuffle(arr);
+
+        //arrange the card img src array
+        for(i=0; i<arr.length; i++){
+            if(arr[i] === 1) arrImg[i] = 'card_joker'
+            else if(arr[i] === 2) arrImg[i] = 'card_spade'
+            else if(arr[i] === 3) arrImg[i] = 'card_heart'
+            else if(arr[i] === 4) arrImg[i] = 'card_jack'
+            else if(arr[i] === 5) arrImg[i] = 'card_diamond'
+            else if(arr[i] === 6) arrImg[i] = 'card_club'
+        }
+        
+        let div = '';
+        //loop through array length, generate div card
+        for(i=0; i<arr.length; i++){
+            div += 
+                `<div class="card-wrapper">
+                <div class="card" data-value="${arr[i]}">
+                <div class="card-inner">
+                <div class="card-front">
+                <img src="card_back.jpg">
+                </div>
+                <div class="card-back">
+                <img src="${arrImg[i]}.png">
+                </div>
+                </div>
+                </div>
+                </div>`;
+        }
+        //append to div #idDiv
+        document.getElementById('idDiv').innerHTML += div;
+    }
+
+    //simple shuffle function
+    function shuffle(array)
+    {
+        array.sort(() => Math.random() - 0.5);
+    }
+
+    //run when a card is clicked
+    function clickFunc()
+    {
+        //flip the card
+        this.firstElementChild.classList.add('clicked');
+        
+        //get the value of the card
+        var value = this.getAttribute('data-value');
+
+        if(card1 == 0){
+            //assign the first value
+            card1 = value;
+            //get the first card (for unflipping)
+            divCard1 = this.firstElementChild;
+            //disable click on the card
+            this.removeEventListener('click', clickFunc);
+        }else{
+            //assign the second value
+            card2 = value;
+            //get the second card (for unflipping)
+            divCard2 = this.firstElementChild;
+            //disable click on the card
+            this.removeEventListener('click', clickFunc);
+        }
+        console.log('card1: ' + card1 + ', card2: ' + card2);
+
+        if(card1 !== 0 && card2 !== 0){
+            //get the current score (to be changed)
+            var currScore = document.getElementById('idScore').innerHTML;
+            console.log('score: ' + currScore);
+            if(card1 === card2){
+                //also increase the score
+                console.log('add score');
+                currScore = parseInt(currScore);
+                currScore += 2;
+            }else{
+                //if mismatch, decrease the score
+                if(currScore == 0){
+                    console.log('minimum score reached');
+                }else{
+                    currScore -= 1;
+                    console.log('minus score');
+                }
+                //reset func
+                resetCard(divCard1, divCard2);
+            }
+            //update the score
+            document.getElementById('idScore').innerHTML = currScore;
+            //reset all vars
+            card1 = 0;
+            card2 = 0;
+            divCard1 = '';
+            divCard2 = '';
+        }
+    }
+
+    //if wrong
+    function resetCard(divCard1, divCard2)
+    {
+        setTimeout(function(){
+            //unflip the card
+            divCard1.classList.remove('clicked');
+            divCard2.classList.remove('clicked');
+            //allow to click again
+            divCard1.parentElement.addEventListener('click', clickFunc);
+            divCard2.parentElement.addEventListener('click', clickFunc);
+        }, 900);
+    }
+
+    ///////////////////////////////////////////////////////////////
+    // Special Thanks                                            //
+    ///////////////////////////////////////////////////////////////
+    // https://javascript.info/task/shuffle for shuffle function //
+    // http://clipart-library.com for the card symbols icon      //
+    // https://www.seekpng.com for the card symbols icon         //
+    // https://www.pngfind.com for the card symbols icon         //
+    ///////////////////////////////////////////////////////////////
+</script>
+</html>
