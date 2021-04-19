@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpKoding - Day Counter</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+        body{
+            margin: 0;
+            font-family: 'Comic Neue', cursive;
+        }
+        .half-page{
+            height: 50vh;
+            width: 100vw;
+        }
+        .top-page{
+            background-color: #3386b6;
+        }
+        .top-content{
+            position:absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+        }
+        .middle-content{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .middle-content button{
+            border-radius: 5px;
+            background-color: #dfae54;
+            color: #fff;
+            border: none;
+            padding: 7px 20px;
+            cursor: pointer;
+        }
+        .middle-content button:hover{
+            background-color: #d69a29;
+        }
+        .middle-content input{
+            border-radius: 5px;
+            background-color: #000;
+            color: #fff;
+            padding: 7px;
+            width: 250px;
+            background-image: linear-gradient(#1d4057, #837d7b);
+            text-align: center;
+        }
+        .bottom-page{
+            background-color: #eee;
+        }
+        .bottom-content{
+            position:absolute;
+            top: 75%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        #idDay{
+            font-size: 3em;
+            margin: 10px;
+        }
+        #idTitle{
+            font-size: 2em;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="half-page top-page">
+        <div class="top-content">
+            <p id="idTitle">Menghitung hari setelah hari ini</p>
+        </div>
+    </div>
+    <div class="middle-content">
+        <input type="number" id="idInput" max="10000000">
+        <button onclick="count()">Cari</button>
+    </div>
+    <div class="half-page bottom-page">
+        <div class="bottom-content">
+            <p><span id="idCount"></span> hari setelah hari ini adalah:</p>
+            <p id="idDay"></h2>
+            <p id="idDate"></p>
+        </div>
+    </div>
+</body>
+<script>
+    // ambil tanggal hari ini
+    var dateNow = new Date();
+
+    //ambil tanggal besok
+    var dateTomorrow = new Date();
+    dateTomorrow.setDate(dateNow.getDate() + 1);
+
+    // ambil nama bulan
+    var monthArr = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+    // ambil nama hari
+    var dayArr = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    
+    // jalankan setelah document on ready
+    document.addEventListener('DOMContentLoaded', function(){
+        document.getElementById('idCount').innerHTML = 1;
+        document.getElementById('idDay').innerHTML = dayArr[dateTomorrow.getDay()];
+        document.getElementById('idDate').innerHTML = dateTomorrow.getDate() + " " + monthArr[dateTomorrow.getMonth()] + " " + dateTomorrow.getFullYear();
+    });
+
+
+    function count()
+    {
+        //abmil jumlah hari yang ditentukan user
+        var input = document.getElementById('idInput').value;
+
+        if(input > 10000000){
+            alert('Mohon masukkan angka yang lebih kecil');
+            return;
+        }
+
+        // variabel utk menampung tanggal hari yg ditentukan
+        var dateThen =  new Date();
+
+        // ambil tanggal sesuai dengan jumlah hari yang diinput
+        dateThen.setDate(dateNow.getDate() + parseInt(input));
+        
+        //Update tampilan hasil
+        document.getElementById('idCount').innerHTML = input;
+        document.getElementById('idDay').innerHTML = dayArr[dateThen.getDay()];
+        document.getElementById('idDate').innerHTML = dateThen.getDate() + " " + monthArr[dateThen.getMonth()] + " " + dateThen.getFullYear();
+    }
+
+    /******************************
+        Special Thanks to
+        > https://dev.to
+        > https://css-tricks.com
+
+    ******************************/
+</script>
+</html>
