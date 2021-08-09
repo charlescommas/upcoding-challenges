@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UpKoding | First Letter Remover</title>
+</head>
+<body>
+    <p>Input: </p>
+    <input type="text" style="width: 40%;" id="idInput">
+    <input type="button" value="Remove!" id="idBtn">
+    <p style="margin-top: 30px;">Output: </p>
+    <div class="box" style="margin-top: 10px; padding: 10px; border: 1px solid black; width: 50%; border-radius: 10px;">
+        <p><span style="color: #766; font-weight: bold; font-style: italic;" id="idOutput"></span></p>
+    </div>    
+</body>
+<script>
+    //triggered when the button is clicked
+    document.getElementById('idBtn').addEventListener('click', function(){
+        //fetch the inputted string
+        let string = document.getElementById('idInput').value;
+
+        // split the string into words
+        let stringArr = string.split(' ');
+        
+        // for each word...
+        stringArr.forEach(function(value, index, array){
+
+            // split the word into letters
+            let wordArr = value.split('');
+
+            // remove the first letter in the word (array)
+            wordArr.shift();
+
+            // rejoin the letters into a word
+            array[index] = wordArr.join('');
+        });
+        // rejoin the words into a string
+        let result = stringArr.join(' ');
+
+        // showing the result
+        document.getElementById('idOutput').innerHTML = result;
+    });
+</script>
+</html>
