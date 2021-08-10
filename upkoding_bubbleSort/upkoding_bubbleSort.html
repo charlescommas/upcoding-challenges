@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upkoding | BubbleSort</title>
+</head>
+<body>
+    <p>Enter a set of numbers separated by comma (,)</p>
+    <input id="idInput" type="text" placeholder="ex: 3, 1, 2">
+    <input id="idBtn" type="button" value="Sort!">
+    <p>Output: <span id="idOutput" style="font-style: italic; font-weight: bold;"></span></p>
+</body>
+<script>
+
+    //triggered when button is clicked
+    document.getElementById('idBtn').addEventListener('click', function(){
+        //checking if the input is empty or not
+        if(document.getElementById('idInput').value != ''){
+            //fetching the input string of nums
+            numArr = document.getElementById('idInput').value.split(',');
+            //convert each array value to integer
+            numArr.forEach(function(value, index, array){
+                array[index] = parseInt(value);
+            });
+            //begin the sorting process
+            sort();
+            //showing the result
+            let output = numArr.join();
+            document.getElementById('idOutput').innerHTML = output;
+        }else{
+            //if there is no input..
+            alert('Input a set of numbers (separated by comma), please.');
+        }
+    });
+
+    function swap(arr, a, b) // to swap 2 values given the index
+    {
+        let c = arr[a];
+        arr[a] = arr[b];
+        arr[b] = c;
+        return arr;
+    }
+
+    function sort() // to begin the sorting process
+    {
+        // getting the length of the array
+        len = numArr.length;
+
+        // loop through each values
+        for(i=0; i<len; i++){
+            for(j=0; j<len-1; j++){
+                // if the first value is greater than the second, swap values
+                if(numArr[j] > numArr[j+1]){
+                    numArr = swap(numArr, j, (j+1));
+                }
+            }
+        }
+    }
+
+</script>
+</html>
