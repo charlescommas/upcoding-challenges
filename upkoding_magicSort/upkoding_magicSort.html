@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upkoding | Magic Sort</title>
+</head>
+<body>
+    <input type="text" id="idInput">
+    <input type="button" id="idBtn" value="Go!">
+    <fieldset style="margin-top: 2em; max-width: 40%;">
+        <legend>Output</legend>
+        <p id="idOutput">&emsp;</p>
+    </fieldset>
+</body>
+<script>
+    document.getElementById('idBtn').addEventListener('click', function(){
+        //get the input string
+        let input = document.getElementById('idInput').value;
+
+        // split the input string into an array
+        var inputArr = input.split('');
+
+        // declare a flag to break the nested loop
+        var breakLoop = false;
+        
+        // do a nested loop for checking both first match and second match
+        for(i=0; i<inputArr.length && !breakLoop; i++){
+            for(j=0; j<(inputArr.length)-1 && !breakLoop; j++){
+                console.log("checking --- " + inputArr[i] + "_" + i + " & " + inputArr[j] + "_" + j);
+                if(inputArr[i] === inputArr[j] && i !== j){
+                    console.log("matched --- " + inputArr[i] + "_" + i + " & " + inputArr[j] + "_" + j);
+
+                    // save the value of the second match (to be moved before the first match)
+                    let temp = inputArr[j];
+
+                    // pushing back the letters between first match and second match ( i < x > j )
+                    var k = j;
+                    for(; k>i; k--){
+                        console.log("pushing --- " + inputArr[k] + " to index " + (k-1));
+                        inputArr[k] = inputArr[k-1];
+                    }
+
+                    // fill the previous index of the first match, with the value of the second match ( j -> i-1 )
+                    inputArr[i] = temp;
+
+                    console.log("done --- " + inputArr);
+                    breakLoop = true;
+                }
+            }
+        }
+
+        // join the array as one string
+        let output = inputArr.join("");
+
+        // show output
+        document.getElementById('idOutput').innerHTML = output;
+    });
+</script>
+</html>
