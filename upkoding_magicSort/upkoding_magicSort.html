@@ -20,13 +20,10 @@
 
         // split the input string into an array
         var inputArr = input.split('');
-
-        // declare a flag to break the nested loop
-        var breakLoop = false;
         
-        // do a nested loop for checking both first match and second match
-        for(i=0; i<inputArr.length && !breakLoop; i++){
-            for(j=0; j<(inputArr.length)-1 && !breakLoop; j++){
+        // do a nested loop for checking all matched character
+        for(i=0; i<inputArr.length; i++){
+            for(j=0; j<inputArr.length; j++){
                 console.log("checking --- " + inputArr[i] + "_" + i + " & " + inputArr[j] + "_" + j);
                 if(inputArr[i] === inputArr[j] && i !== j){
                     console.log("matched --- " + inputArr[i] + "_" + i + " & " + inputArr[j] + "_" + j);
@@ -45,7 +42,6 @@
                     inputArr[i] = temp;
 
                     console.log("done --- " + inputArr);
-                    breakLoop = true;
                 }
             }
         }
